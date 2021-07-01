@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        #map {
+            width: 100%;
+            height: 700px;
+        }
+        </style>
+        <title> Breed opgezette wegen Zone zwaar verkeer Amsterdam</title>
+    </head>
+    <body>
+	<table style='width:100%'><TR>
+	<TD><img src="https://www.amsterdam.nl/views/core/images/logos/andreas.png" height="75" alt="andreas"> 	</td>
+	<td><h1>Breed opgezette wegen Zone zwaar verkeer Amsterdam</h1>
+	Lees meer over <a href="https://www.amsterdam.nl/parkeren-verkeer/zone-zwaar-verkeer-amsterdam/">Zone zwaar verkeer</a>
+<BR><BR><B> Legenda </B><BR>
+	<img src="legenda.PNG" alt="legenda">
+	</TD></TR></table>
+	        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="data/ZZV_2.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[52.34391132319137,4.856062434652221],[52.3972837056456,5.011790320974648]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_Amsterdam_Topo_wm_zw_0');
+        map.getPane('pane_Amsterdam_Topo_wm_zw_0').style.zIndex = 400;
+        var layer_Amsterdam_Topo_wm_zw_0 = L.tileLayer('https://t1.data.amsterdam.nl/topo_wm_zw/{z}/{x}/{y}.png', {
+            pane: 'pane_Amsterdam_Topo_wm_zw_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_Amsterdam_Topo_wm_zw_0;
+        map.addLayer(layer_Amsterdam_Topo_wm_zw_0);
+        map.createPane('pane_ZoneZwaarVerkeer_1');
+        map.getPane('pane_ZoneZwaarVerkeer_1').style.zIndex = 401;
+        var layer_ZoneZwaarVerkeer_1 = L.tileLayer('https://synergeo.nl/vma400_20210622_undirected_zzv/{z}/{x}/{y}.png', {
+            pane: 'pane_ZoneZwaarVerkeer_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 18
+        });
+        layer_ZoneZwaarVerkeer_1;
+        map.addLayer(layer_ZoneZwaarVerkeer_1);
+        function pop_ZZV_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">_uid_</th>\
+                        <td>' + (feature.properties['_uid_'] !== null ? autolinker.link(feature.properties['_uid_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">linknr</th>\
+                        <td>' + (feature.properties['linknr'] !== null ? autolinker.link(feature.properties['linknr'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">name</th>\
+                        <td>' + (feature.properties['name'] !== null ? autolinker.link(feature.properties['name'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">zone_7_5</th>\
+                        <td>' + (feature.properties['zone_7_5'] !== null ? autolinker.link(feature.properties['zone_7_5'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_ZZV_2_0(feature) {
+            switch(String(feature.properties['zone_7_5'])) {
+                case 'binnen - breed opgezette wegen':
+                    return {
+                pane: 'pane_ZZV_2',
+                opacity: 1,
+                color: 'rgba(162,45,109,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'binnen':
+                    return {
+                pane: 'pane_ZZV_2',
+                opacity: 1,
+                color: 'rgba(180,55,229,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 1.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'buiten':
+                    return {
+                pane: 'pane_ZZV_2',
+                opacity: 1,
+                color: 'rgba(40,167,69,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_ZZV_2');
+        map.getPane('pane_ZZV_2').style.zIndex = 402;
+        map.getPane('pane_ZZV_2').style['mix-blend-mode'] = 'normal';
+        var layer_ZZV_2 = new L.geoJson(json_ZZV_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ZZV_2',
+            layerName: 'layer_ZZV_2',
+            pane: 'pane_ZZV_2',
+            onEachFeature: pop_ZZV_2,
+            style: style_ZZV_2_0,
+        });
+        bounds_group.addLayer(layer_ZZV_2);
+        map.addLayer(layer_ZZV_2);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        setBounds();
+        </script>
+		Dit is een tijdelijke pagina. Data komt binnenkort op https://data.amsterdam.nl
+    </body>
+</html>
